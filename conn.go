@@ -6,6 +6,8 @@ import (
 	"time"
 
 	_ "gitee.com/opengauss/openGauss-connector-go-pq"
+	"github.com/assembly-hub/db"
+	"github.com/assembly-hub/impl-db-sql"
 )
 
 type Config struct {
@@ -31,16 +33,16 @@ func NewClient(cfg *Config) *Client {
 	return c
 }
 
-func (c *Client) Connect() (*sql.DB, error) {
+func (c *Client) Connect() (db.Executor, error) {
 	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s sslmode=%s",
 		c.cfg.User, c.cfg.Password, c.cfg.Host, c.cfg.Port, c.cfg.Database, c.cfg.SSLMode)
-	db, err := sql.Open("opengauss", dsn)
+	conn, err := sql.Open("opengauss", dsn)
 	if err != nil {
 		return nil, err
 	}
-	db.SetConnMaxLifetime(time.Duration(c.cfg.ConnMaxLifeTime) * time.Millisecond)
-	db.SetConnMaxIdleTime(time.Duration(c.cfg.ConnMaxIdleTime) * time.Millisecond)
-	db.SetMaxOpenConns(c.cfg.MaxOpenConn)
-	db.SetMaxIdleConns(c.cfg.MaxIdleConn)
-	return db, err
+	conn.SetConnMaxLifetime(time.Duration(c.cfg.ConnMaxLifeTime) * time.Millisecond)
+	conn.SetConnMaxIdleTime(time.Duration(c.cfg.ConnMaxIdleTime) * time.Millisecond)
+	conn.SetMaxOpenConns(c.cfg.MaxOpenConn)
+	conn.SetMaxIdleConns(c.cfg.MaxIdleConn)
+	return impl.NewDB(conn), err
 }
