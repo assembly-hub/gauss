@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	gitee.com/opengauss/openGauss-connector-go-pq v1.0.4
-	github.com/assembly-hub/db v1.1.0
-	github.com/assembly-hub/impl-db-sql v1.1.0
+	github.com/assembly-hub/db v1.2.0
+	github.com/assembly-hub/impl-db-sql v1.2.2
 )
 
 require (
